@@ -1,0 +1,28 @@
+#!/usr/bin/env bash
+
+#/ command: pryshchepa:dmytro: "prints all environment variables"
+#/ usage: rerun pryshchepa:dmytro [options]
+#/ rerun-variables: RERUN, RERUN_VERSION, RERUN_MODULES, RERUN_MODULE_DIR
+#/ option-variables: 
+
+. "$RERUN_MODULE_DIR/lib/functions.sh" "dmytro" || { 
+  echo >&2 "Failed loading function library." ; exit 1 ; 
+}
+
+set -o errexit -o nounset -o pipefail
+
+rerun_options_parse "$@"
+
+# Command implementation
+# ----------------------
+CLEAR="\u001b[0m"
+RED="\u001b[31m"
+GREEN="\u001b[32m"
+
+env -0 | while IFS='=' read -r -d '' n v; do
+    printf "${RED}%s${CLEAR}=${GREEN}%s${CLEAR}\n" "$n" "$v"
+done
+
+# Done. Exit with last command exit status.
+exit $?
+
